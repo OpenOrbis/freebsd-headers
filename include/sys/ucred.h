@@ -38,11 +38,11 @@
 struct loginclass;
 
 /*
- * Credentials.
- *
- * Please do not inspect cr_uid directly to determine superuserness.  The
- * priv(9) interface should be used to check for privilege.
- */
+* Credentials.
+*
+* Please do not inspect cr_uid directly to determine superuserness.  The
+* priv(9) interface should be used to check for privilege.
+*/
 #if defined(_KERNEL) || defined(_WANT_UCRED)
 struct ucred {
 	u_int	cr_ref;			/* reference count */
@@ -60,7 +60,12 @@ struct ucred {
 	u_int		cr_flags;	/* credential flags */
 	void 		*cr_pspare2[2];	/* general use 2 */
 #define	cr_endcopy	cr_label
-	struct label	*cr_label;	/* MAC label */
+
+	uint64_t cr_sceAuthID;          /* sony app authorization id */
+	uint64_t cr_sceCaps[0x04];	/* sony app capabilities */
+	uint64_t cr_sceAttr[0x04];	/* sony app attributes */
+	char     cr_unk0A0[0x48];
+
 	struct auditinfo_addr	cr_audit;	/* Audit properties. */
 	gid_t	*cr_groups;		/* groups */
 	int	cr_agroups;		/* Available groups */

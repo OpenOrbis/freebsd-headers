@@ -196,10 +196,10 @@ struct rusage_ext {
 };
 
 /*
- * Kernel runnable context (thread).
- * This is what is put to sleep and reactivated.
- * Thread context.  Processes may have multiple threads.
- */
+* Kernel runnable context (thread).
+* This is what is put to sleep and reactivated.
+* Thread context.  Processes may have multiple threads.
+*/
 struct thread {
 	struct mtx	*volatile td_lock; /* replaces sched lock */
 	struct proc	*td_proc;	/* (*) Associated process. */
@@ -218,7 +218,7 @@ struct thread {
 #define	td_siglist	td_sigqueue.sq_signals
 	u_char		td_lend_user_pri; /* (t) Lend user pri. */
 
-/* Cleared during fork1() */
+								  /* Cleared during fork1() */
 #define	td_startzero td_flags
 	int		td_flags;	/* (t) TDF_* flags. */
 	int		td_inhibitors;	/* (t) Why can not run. */
@@ -261,7 +261,7 @@ struct thread {
 	int		td_xsig;	/* (c) Signal for ptrace */
 	u_long		td_profil_addr;	/* (k) Temporary addr until AST. */
 	u_int		td_profil_ticks; /* (k) Temporary ticks until AST. */
-	char		td_name[MAXCOMLEN + 1];	/* (*) Thread name. */
+	char		td_name[MAXCOMLEN + 17];	/* (*) Thread name. */
 	struct file	*td_fpop;	/* (k) file referencing cdev under op */
 	int		td_dbgflags;	/* (c) Userland debugger flags */
 	struct ksiginfo td_dbgksi;	/* (c) ksi reflected to debugger. */
@@ -271,20 +271,25 @@ struct thread {
 	pid_t		td_dbg_forked;	/* (c) Child pid for debugger. */
 #define	td_endzero td_rqindex
 
-/* Copied during fork1() or thread_sched_upcall(). */
+	char td_unk35C[0x04];
+
+	char td_unk360[0x18];
+	char td_unk378[0x04];
+
+	/* Copied during fork1() or thread_sched_upcall(). */
 #define	td_startcopy td_endzero
-	u_char		td_rqindex;	/* (t) Run queue index. */
-	u_char		td_base_pri;	/* (t) Thread base kernel priority. */
-	u_char		td_priority;	/* (t) Thread active priority. */
-	u_char		td_pri_class;	/* (t) Scheduling class. */
-	u_char		td_user_pri;	/* (t) User pri from estcpu and nice. */
-	u_char		td_base_user_pri; /* (t) Base user pri */
+	u_short		td_rqindex;	/* (t) Run queue index. */
+	u_short		td_base_pri;	/* (t) Thread base kernel priority. */
+	u_short		td_priority;	/* (t) Thread active priority. */
+	u_short		td_pri_class;	/* (t) Scheduling class. */
+	u_short		td_user_pri;	/* (t) User pri from estcpu and nice. */
+	u_short		td_base_user_pri; /* (t) Base user pri */
 #define	td_endcopy td_pcb
 
-/*
- * Fields that must be manually set in fork1() or thread_sched_upcall()
- * or already have been set in the allocator, constructor, etc.
- */
+								  /*
+								  * Fields that must be manually set in fork1() or thread_sched_upcall()
+								  * or already have been set in the allocator, constructor, etc.
+								  */
 	struct pcb	*td_pcb;	/* (k) Kernel VA of pcb and kstack. */
 	enum {
 		TDS_INACTIVE = 0x0,
@@ -309,6 +314,14 @@ struct thread {
 	struct vnet	*td_vnet;	/* (k) Effective vnet. */
 	const char	*td_vnet_lpush;	/* (k) Debugging vnet push / pop. */
 	struct trapframe *td_intr_frame;/* (k) Frame of the current irq */
+
+	char            td_unk440[0xA8];
+
+	char            td_unk4E8[0x58];
+
+	char            td_unk540[0x20];
+
+	char td_unk560[0x10];
 };
 
 struct mtx *thread_lock_block(struct thread *);
@@ -464,8 +477,7 @@ do {									\
 #define	TD_SET_RUNNING(td)	(td)->td_state = TDS_RUNNING
 #define	TD_SET_RUNQ(td)		(td)->td_state = TDS_RUNQ
 #define	TD_SET_CAN_RUN(td)	(td)->td_state = TDS_CAN_RUN
-
-/*
+ /*
  * Process structure.
  */
 struct proc {
@@ -480,10 +492,10 @@ struct proc {
 	struct callout	p_limco;	/* (c) Limit callout handle */
 	struct sigacts	*p_sigacts;	/* (x) Signal actions, state (CPU). */
 
-	/*
-	 * The following don't make too much sense.
-	 * See the td_ or ke_ versions of the same flags.
-	 */
+								/*
+								* The following don't make too much sense.
+								* See the td_ or ke_ versions of the same flags.
+								*/
 	int		p_flag;		/* (c) P_* flags. */
 	enum {
 		PRS_NEW = 0,		/* In creation */
@@ -501,7 +513,7 @@ struct proc {
 	sigqueue_t	p_sigqueue;	/* (c) Sigs not delivered to a td. */
 #define p_siglist	p_sigqueue.sq_signals
 
-/* The following fields are all zeroed upon creation in fork. */
+							/* The following fields are all zeroed upon creation in fork. */
 #define	p_startzero	p_oppid
 	pid_t		p_oppid;	/* (c + e) Save ppid in ptrace. XXX */
 	int		p_dbg_child;	/* (c + e) # of debugged children in
@@ -536,23 +548,50 @@ struct proc {
 	int		p_pendingcnt;	/* how many signals are pending */
 	struct itimers	*p_itimers;	/* (c) POSIX interval timers. */
 	struct procdesc	*p_procdesc;	/* (e) Process descriptor, if any. */
-/* End area that is zeroed on creation. */
+									/* End area that is zeroed on creation. */
 #define	p_endzero	p_magic
 
-/* The following fields are all copied upon creation in fork. */
+									/* PS4 specific data */
+	char		*p_patchpath;	/* patch file path */
+	int		p_unk338;
+	void		*p_dynlib;      /* Sony Dynlib info */
+	char            unk348[0x58];
+
+	char		p_unk3A0[0x38];
+
+	char		p_unk3D8[0x10];
+
+	char		p_unk3E8[0x54];
+
+	char		p_unk43C[0x08];
+	/* PS4 specific data */
+
+	/* The following fields are all copied upon creation in fork. */
 #define	p_startcopy	p_endzero
 	u_int		p_magic;	/* (b) Magic number. */
 	int		p_osrel;	/* (x) osreldate for the
-					       binary (from ELF note, if any) */
-	char		p_comm[MAXCOMLEN + 1];	/* (b) Process name. */
+						binary (from ELF note, if any) */
+	char		p_comm[MAXCOMLEN + 13];	/* (b) Process name. */
+
+										/* PS4 specific data */
+	char		p_elfpath[PATH_MAX];        /* full path to elf */
+											/* PS4 specific data */
+
 	struct pgrp	*p_pgrp;	/* (c + e) Pointer to process group. */
 	struct sysentvec *p_sysent;	/* (b) Syscall dispatch info. */
 	struct pargs	*p_args;	/* (c) Process arguments. */
 	rlim_t		p_cpulimit;	/* (c) Current CPU limit in seconds. */
 	signed char	p_nice;		/* (c) Process "nice" value. */
 	int		p_fibnum;	/* in this routing domain XXX MRT */
-/* End area that is copied on creation. */
+						/* End area that is copied on creation. */
 #define	p_endcopy	p_xstat
+
+						/* PS4 specific data */
+	int		p_unk7F0;
+	int		p_unk7F4;
+	int		p_sandBoxLen;		/* sandbox base name length */
+	char		p_sandbox[0x100];	/* sandbox base name */
+									/* PS4 specific data */
 
 	u_short		p_xstat;	/* (c) Exit status; also stop sig. */
 	struct knlist	p_klist;	/* (c) Knotes attached to this proc. */
@@ -570,9 +609,15 @@ struct proc {
 	struct kdtrace_proc	*p_dtrace; /* (*) DTrace-specific data. */
 	struct cv	p_pwait;	/* (*) wait cv for exit/exec. */
 	struct cv	p_dbgwait;	/* (*) wait cv for debugger attach
-					   after fork. */
+							after fork. */
 	uint64_t	p_prev_runtime;	/* (c) Resource usage accounting. */
 	struct racct	*p_racct;	/* (b) Resource accounting. */
+
+								/* PS4 specific data */
+	char            unkA08[0x98];
+	char            unkAA0[0x18];
+	char            unkAB8[0x20];
+	/* PS4 specific data */
 };
 
 #define	p_session	p_pgrp->pg_session
