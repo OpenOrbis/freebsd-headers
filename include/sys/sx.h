@@ -212,10 +212,10 @@ __sx_sunlock(struct sx *sx, const char *file, int line)
 #define	sx_xlock_sig(sx)						\
 	_sx_xlock((sx), SX_INTERRUPTIBLE, LOCK_FILE, LOCK_LINE)
 #define	sx_xunlock(sx)		_sx_xunlock((sx), LOCK_FILE, LOCK_LINE)
-#define	sx_slock(sx)		(void)_sx_slock((sx), 0, LOCK_FILE, LOCK_LINE)
+#define	sx_slock(sx)		(void)(*_sx_slock)((sx), 0, LOCK_FILE, LOCK_LINE)
 #define	sx_slock_sig(sx)						\
 	_sx_slock((sx), SX_INTERRUPTIBLE, LOCK_FILE, LOCK_LINE)
-#define	sx_sunlock(sx)		_sx_sunlock((sx), LOCK_FILE, LOCK_LINE)
+#define	sx_sunlock(sx)		(*_sx_sunlock)((sx), LOCK_FILE, LOCK_LINE)
 #else
 #define	sx_xlock(sx)							\
 	(void)__sx_xlock((sx), curthread, 0, LOCK_FILE, LOCK_LINE)

@@ -716,7 +716,7 @@ MALLOC_DECLARE(M_SUBPROC);
 #endif
 
 #define	FOREACH_PROC_IN_SYSTEM(p)					\
-	LIST_FOREACH((p), &allproc, p_list)
+	LIST_FOREACH((p), allproc, p_list)
 #define	FOREACH_THREAD_IN_PROC(p, td)					\
 	TAILQ_FOREACH((td), &(p)->p_threads, td_plist)
 
