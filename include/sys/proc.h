@@ -273,8 +273,13 @@ struct thread {
 
 	char td_unk35C[0x04];
 
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_355
 	char td_unk360[0x18];
+#endif
+
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_455
 	char td_unk378[0x04];
+#endif
 
 	/* Copied during fork1() or thread_sched_upcall(). */
 #define	td_startcopy td_endzero
@@ -317,11 +322,17 @@ struct thread {
 
 	char            td_unk440[0xA8];
 
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_355
 	char            td_unk4E8[0x58];
+#endif
 
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_455
 	char            td_unk540[0x20];
+#endif
 
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_500
 	char td_unk560[0x10];
+#endif
 };
 
 struct mtx *thread_lock_block(struct thread *);
@@ -551,19 +562,27 @@ struct proc {
 									/* End area that is zeroed on creation. */
 #define	p_endzero	p_magic
 
-									/* PS4 specific data */
 	char		*p_patchpath;	/* patch file path */
 	int		p_unk338;
 	void		*p_dynlib;      /* Sony Dynlib info */
 	char            unk348[0x58];
 
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_355
 	char		p_unk3A0[0x38];
+#endif
 
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_400
 	char		p_unk3D8[0x10];
+#endif
 
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_455
 	char		p_unk3E8[0x54];
+#endif
 
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_500
 	char		p_unk43C[0x08];
+#endif
+
 	/* PS4 specific data */
 
 	/* The following fields are all copied upon creation in fork. */
@@ -613,10 +632,14 @@ struct proc {
 	uint64_t	p_prev_runtime;	/* (c) Resource usage accounting. */
 	struct racct	*p_racct;	/* (b) Resource accounting. */
 
-								/* PS4 specific data */
 	char            unkA08[0x98];
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_500
 	char            unkAA0[0x18];
+#endif
+
+#if ONI_PLATFORM >= ONI_PLATFORM_ORBIS_BSD_355
 	char            unkAB8[0x20];
+#endif
 	/* PS4 specific data */
 };
 
