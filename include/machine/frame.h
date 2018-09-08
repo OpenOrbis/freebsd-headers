@@ -48,37 +48,75 @@
  * the syscall arguments directly from the beginning of the frame.
  */
 
-struct trapframe {
-	register_t	tf_rdi;
-	register_t	tf_rsi;
-	register_t	tf_rdx;
-	register_t	tf_rcx;
-	register_t	tf_r8;
-	register_t	tf_r9;
-	register_t	tf_rax;
-	register_t	tf_rbx;
-	register_t	tf_rbp;
-	register_t	tf_r10;
-	register_t	tf_r11;
-	register_t	tf_r12;
-	register_t	tf_r13;
-	register_t	tf_r14;
-	register_t	tf_r15;
-	uint32_t	tf_trapno;
-	uint16_t	tf_fs;
-	uint16_t	tf_gs;
-	register_t	tf_addr;
-	uint32_t	tf_flags;
-	uint16_t	tf_es;
-	uint16_t	tf_ds;
-	/* below portion defined in hardware */
-	register_t	tf_err;
-	register_t	tf_rip;
-	register_t	tf_cs;
-	register_t	tf_rflags;
-	register_t	tf_rsp;
-	register_t	tf_ss;
+//struct trapframe {
+//	register_t	tf_rdi;
+//	register_t	tf_rsi;
+//	register_t	tf_rdx;
+//	register_t	tf_rcx;
+//	register_t	tf_r8;
+//	register_t	tf_r9;
+//	register_t	tf_rax;
+//	register_t	tf_rbx;
+//	register_t	tf_rbp;
+//	register_t	tf_r10;
+//	register_t	tf_r11;
+//	register_t	tf_r12;
+//	register_t	tf_r13;
+//	register_t	tf_r14;
+//	register_t	tf_r15;
+//	uint32_t	tf_trapno;
+//	uint16_t	tf_fs;
+//	uint16_t	tf_gs;
+//	register_t	tf_addr;
+//	uint32_t	tf_flags;
+//	uint16_t	tf_es;
+//	uint16_t	tf_ds;
+//	/* below portion defined in hardware */
+//	register_t	tf_err;
+//	register_t	tf_rip;
+//	register_t	tf_cs;
+//	register_t	tf_rflags;
+//	register_t	tf_rsp;
+//	register_t	tf_ss;
+//};
+
+struct trapframe
+{
+	register_t tf_rdi;			// 0x00
+	register_t tf_rsi;			// 0x08
+	register_t tf_rdx;			// 0x10
+	register_t tf_rcx;			// 0x18
+	register_t tf_r8;			// 0x20
+	register_t tf_r9;			// 0x28
+	register_t tf_rax;			// 0x30
+	register_t tf_rbx;			// 0x38
+	register_t tf_rbp;			// 0x40
+	register_t tf_r10;			// 0x48
+	register_t tf_r11;			// 0x50
+	register_t tf_r12;			// 0x58
+	register_t tf_r13;			// 0x60
+	register_t tf_r14;			// 0x68
+	register_t tf_r15;			// 0x70
+	uint32_t tf_trapno;			// 0x78
+	uint16_t tf_fs;				// 0x7C
+	uint16_t tf_gs;				// 0x7E
+	register_t tf_addr;			// 0x80
+	uint32_t tf_flags;			// 0x88
+	uint16_t tf_es;				// 0x8C
+	uint16_t tf_ds;				// 0x8E
+
+	register_t tf_last_branch_from;		// 0x90
+	register_t tf_last_branch_to;		// 0x98
+
+										/* below portion defined in hardware */
+	register_t tf_err;			// 0xA0
+	register_t tf_rip;			// 0xA8
+	register_t tf_cs;			// 0xB0
+	register_t tf_rflags;			// 0xB8
+	register_t tf_rsp;			// 0xC0
+	register_t tf_ss;			// 0xC8
 };
+
 
 #define	TF_HASSEGS	0x1
 /* #define	_MC_HASBASES	0x2 */
