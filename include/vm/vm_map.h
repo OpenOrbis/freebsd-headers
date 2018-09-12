@@ -97,24 +97,28 @@ union vm_map_object {
  *	Also included is control information for virtual copy operations.
  */
 struct vm_map_entry {
-	struct vm_map_entry *prev;	/* previous entry */
-	struct vm_map_entry *next;	/* next entry */
-	struct vm_map_entry *left;	/* left child in binary search tree */
-	struct vm_map_entry *right;	/* right child in binary search tree */
-	vm_offset_t start;		/* start address */
-	vm_offset_t end;		/* end address */
-	vm_offset_t avail_ssize;	/* amt can grow if this is a stack */
-	vm_size_t adj_free;		/* amount of adjacent free space */
-	vm_size_t max_free;		/* max free space in subtree */
-	union vm_map_object object;	/* object I point to */
-	vm_ooffset_t offset;		/* offset into object */
-	vm_eflags_t eflags;		/* map entry flags */
-	vm_prot_t protection;		/* protection code */
-	vm_prot_t max_protection;	/* maximum protection */
-	vm_inherit_t inheritance;	/* inheritance */
-	int wired_count;		/* can be paged if = 0 */
-	vm_pindex_t lastr;		/* last read */
-	struct ucred *cred;		/* tmp storage for creator ref */
+	struct vm_map_entry *prev;	/* previous entry */						// 0x00
+	struct vm_map_entry *next;	/* next entry */							// 0x08
+	struct vm_map_entry *left;	/* left child in binary search tree */		// 0x10
+	struct vm_map_entry *right;	/* right child in binary search tree */		// 0x18
+	vm_offset_t start;		/* start address */								// 0x20
+	vm_offset_t end;		/* end address */								// 0x28
+	vm_offset_t avail_ssize;	/* amt can grow if this is a stack */		// 0x30
+	vm_size_t adj_free;		/* amount of adjacent free space */				// 0x38
+	vm_size_t max_free;		/* max free space in subtree */					// 0x40
+	union vm_map_object object;	/* object I point to */						// 0x48
+	vm_ooffset_t offset;		/* offset into object */					// 0x50
+	vm_eflags_t eflags;		/* map entry flags */							// 0x58
+	vm_prot_t protection;		/* protection code */						// 0x5C
+	vm_prot_t max_protection;	/* maximum protection */					// 0x5D
+	vm_inherit_t inheritance;	/* inheritance */							// 0x5E
+	int wired_count;		/* can be paged if = 0 */						// 0x60
+	vm_pindex_t lastr;		/* last read */									// 0x68
+	struct ucred *cred;		/* tmp storage for creator ref */				// 0x70
+
+#ifdef ONI_PLATFORM
+	char unk78[0x48];
+#endif
 };
 
 #define MAP_ENTRY_NOSYNC		0x0001
