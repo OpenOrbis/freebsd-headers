@@ -140,49 +140,18 @@ struct sx_args {
  * deferred to 'tougher' functions.
  */
 
-/* Acquire an exclusive lock. */
-static __inline int
-__sx_xlock(struct sx *sx, struct thread *td, int opts, const char *file,
-    int line)
-{
-	uintptr_t tid = (uintptr_t)td;
-	int error = 0;
-
-	if (!atomic_cmpset_acq_ptr(&sx->sx_lock, SX_LOCK_UNLOCKED, tid))
-		error = _sx_xlock_hard(sx, tid, opts, file, line);
-	else 
-		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_SX_XLOCK_ACQUIRE,
-		    sx, 0, 0, file, line);
-
-	return (error);
-}
-
-/* Release an exclusive lock. */
-static __inline void
-__sx_xunlock(struct sx *sx, struct thread *td, const char *file, int line)
-{
-	uintptr_t tid = (uintptr_t)td;
-
-	if (!atomic_cmpset_rel_ptr(&sx->sx_lock, tid, SX_LOCK_UNLOCKED))
-		_sx_xunlock_hard(sx, tid, file, line);
-}
-
-/* Acquire a shared lock. */
-static __inline int
-__sx_slock(struct sx *sx, int opts, const char *file, int line)
-{
-	uintptr_t x = sx->sx_lock;
-	int error = 0;
-
-	if (!(x & SX_LOCK_SHARED) ||
-	    !atomic_cmpset_acq_ptr(&sx->sx_lock, x, x + SX_ONE_SHARER))
-		error = _sx_slock_hard(sx, opts, file, line);
-	else
-		LOCKSTAT_PROFILE_OBTAIN_LOCK_SUCCESS(LS_SX_SLOCK_ACQUIRE, sx, 0,
-		    0, file, line);
-
-	return (error);
-}
+///* Acquire an exclusive lock. */
+//static __inline int
+//__sx_xlock(struct sx *sx, struct thread *td, int opts, const char *file,
+//	int line);
+//
+///* Release an exclusive lock. */
+//static __inline void
+//__sx_xunlock(struct sx *sx, struct thread *td, const char *file, int line);
+//
+///* Acquire a shared lock. */
+//static __inline int
+//__sx_slock(struct sx *sx, int opts, const char *file, int line);
 
 /*
  * Release a shared lock.  We can just drop a single shared lock so
@@ -191,15 +160,8 @@ __sx_slock(struct sx *sx, int opts, const char *file, int line)
  * the fact that an unlocked lock is encoded as a shared lock with a
  * count of 0.
  */
-static __inline void
-__sx_sunlock(struct sx *sx, const char *file, int line)
-{
-	uintptr_t x = sx->sx_lock;
-
-	if (x == (SX_SHARERS_LOCK(1) | SX_LOCK_EXCLUSIVE_WAITERS) ||
-	    !atomic_cmpset_rel_ptr(&sx->sx_lock, x, x - SX_ONE_SHARER))
-		_sx_sunlock_hard(sx, file, line);
-}
+//static __inline void
+//__sx_sunlock(struct sx *sx, const char *file, int line);
 
 /*
  * Public interface for lock operations.
@@ -222,7 +184,7 @@ __sx_sunlock(struct sx *sx, const char *file, int line)
 #define	sx_xlock_sig(sx)						\
 	__sx_xlock((sx), curthread, SX_INTERRUPTIBLE, LOCK_FILE, LOCK_LINE)
 #define	sx_xunlock(sx)							\
-	__sx_xunlock((sx), curthread, LOCK_FILE, LOCK_LINE)
+	(*__sx_xunlock)((sx), curthread, LOCK_FILE, LOCK_LINE)
 #define	sx_slock(sx)		(void)__sx_slock((sx), 0, LOCK_FILE, LOCK_LINE)
 #define	sx_slock_sig(sx)						\
 	__sx_slock((sx), SX_INTERRUPTIBLE, LOCK_FILE, LOCK_LINE)
@@ -270,28 +232,28 @@ __sx_sunlock(struct sx *sx, const char *file, int line)
  */
 #define	SX_INTERRUPTIBLE	0x40
 
-#if defined(INVARIANTS) || defined(INVARIANT_SUPPORT)
-#define	SA_LOCKED		LA_LOCKED
-#define	SA_SLOCKED		LA_SLOCKED
-#define	SA_XLOCKED		LA_XLOCKED
-#define	SA_UNLOCKED		LA_UNLOCKED
-#define	SA_RECURSED		LA_RECURSED
-#define	SA_NOTRECURSED		LA_NOTRECURSED
+//#if defined(INVARIANTS) || defined(INVARIANT_SUPPORT)
+//#define	SA_LOCKED		LA_LOCKED
+//#define	SA_SLOCKED		LA_SLOCKED
+//#define	SA_XLOCKED		LA_XLOCKED
+//#define	SA_UNLOCKED		LA_UNLOCKED
+//#define	SA_RECURSED		LA_RECURSED
+//#define	SA_NOTRECURSED		LA_NOTRECURSED
+//
+///* Backwards compatability. */
+//#define	SX_LOCKED		LA_LOCKED
+//#define	SX_SLOCKED		LA_SLOCKED
+//#define	SX_XLOCKED		LA_XLOCKED
+//#define	SX_UNLOCKED		LA_UNLOCKED
+//#define	SX_RECURSED		LA_RECURSED
+//#define	SX_NOTRECURSED		LA_NOTRECURSED
+//#endif
 
-/* Backwards compatability. */
-#define	SX_LOCKED		LA_LOCKED
-#define	SX_SLOCKED		LA_SLOCKED
-#define	SX_XLOCKED		LA_XLOCKED
-#define	SX_UNLOCKED		LA_UNLOCKED
-#define	SX_RECURSED		LA_RECURSED
-#define	SX_NOTRECURSED		LA_NOTRECURSED
-#endif
-
-#ifdef INVARIANTS
-#define	sx_assert(sx, what)	_sx_assert((sx), (what), LOCK_FILE, LOCK_LINE)
-#else
-#define	sx_assert(sx, what)	(void)0
-#endif
+//#ifdef INVARIANTS
+//#define	sx_assert(sx, what)	_sx_assert((sx), (what), LOCK_FILE, LOCK_LINE)
+//#else
+//#define	sx_assert(sx, what)	(void)0
+//#endif
 
 #endif /* _KERNEL */
 

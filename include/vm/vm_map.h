@@ -117,7 +117,9 @@ struct vm_map_entry {
 	struct ucred *cred;		/* tmp storage for creator ref */				// 0x70
 
 #ifdef ONI_PLATFORM
-	char unk78[0x48];
+	uint8_t unk78[0x15];													// 0x78
+	char name[0x20];														// 0x8D
+	uint8_t unkAD[0x13];													// 0xAD
 #endif
 };
 
