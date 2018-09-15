@@ -121,7 +121,7 @@ struct vm_map_entry {
 	char name[0x20];														// 0x8D
 	uint8_t unkAD[0x13];													// 0xAD
 #endif
-};
+}; // 0xC0
 
 #define MAP_ENTRY_NOSYNC		0x0001
 #define MAP_ENTRY_IS_SUB_MAP		0x0002
@@ -180,9 +180,9 @@ vm_map_entry_system_wired_count(vm_map_entry_t entry)
  *	(c)	const until freed
  */
 struct vm_map {
-	struct vm_map_entry header;	/* List of entries */
-	struct sx lock;			/* Lock for map data */
-	struct mtx system_mtx;
+	struct vm_map_entry header;	/* List of entries */									// 0x0
+	struct sx lock;			/* Lock for map data */										// 0xC0
+	struct mtx system_mtx;																// 0xE0
 	int nentries;			/* Number of entries */
 	vm_size_t size;			/* virtual size */
 	u_int timestamp;		/* Version number */
@@ -194,6 +194,8 @@ struct vm_map {
 #define	min_offset	header.start	/* (c) */
 #define	max_offset	header.end	/* (c) */
 	int busy;
+
+	char unk130[0x48];
 };
 
 /*
