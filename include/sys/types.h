@@ -261,7 +261,9 @@ typedef	__uint64_t	uoff_t;
 typedef	char		vm_memattr_t;	/* memory attribute codes */
 typedef	struct vm_page	*vm_page_t;
 
+#ifndef offsetof
 #define offsetof(type, field) __offsetof(type, field)
+#endif
 
 #endif /* !_KERNEL */
 

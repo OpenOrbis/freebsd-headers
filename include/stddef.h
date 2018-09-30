@@ -59,6 +59,8 @@ typedef	__wchar_t	wchar_t;
 #endif
 #endif
 
+#ifndef offsetof
 #define	offsetof(type, member)	__offsetof(type, member)
+#endif
 
 #endif /* _STDDEF_H_ */

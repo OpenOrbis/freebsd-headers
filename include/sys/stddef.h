@@ -38,6 +38,8 @@ typedef	__ptrdiff_t	ptrdiff_t;
 #define	_PTRDIFF_T_DECLARED
 #endif
 
+#ifndef offsetof
 #define	offsetof(type, field)	__offsetof(type, field)
+#endif
 
 #endif /* !_SYS_STDDEF_H_ */
