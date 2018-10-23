@@ -47,11 +47,11 @@ void	 bzero(void *, size_t);					/* LEGACY */
 int	 ffs(int) __pure2;
 #endif
 #if __BSD_VISIBLE
-int	 ffsl(long) __pure2;
-int	 ffsll(long long) __pure2;
-int	 fls(int) __pure2;
-int	 flsl(long) __pure2;
-int	 flsll(long long) __pure2;
+int	 ffsl(long) /*__pure2*/;
+int	 ffsll(long long) /*__pure2*/;
+int	 fls(int) /*__pure2*/;
+int	 flsl(long) /*__pure2*/;
+int	 flsll(long long) /*__pure2*/;
 #endif
 #if __BSD_VISIBLE || __POSIX_VISIBLE <= 200112
 char	*index(const char *, int) __pure;			/* LEGACY */
