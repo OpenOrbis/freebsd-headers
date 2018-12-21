@@ -148,21 +148,21 @@ calculate_crc32c(uint32_t crc32c, const unsigned char *buffer,
         unsigned int length);
 
 
-LIBKERN_INLINE void *memset(void *, int, size_t);
-#ifdef LIBKERN_BODY
-LIBKERN_INLINE void *
-memset(void *b, int c, size_t len)
-{
-	char *bb;
-
-	if (c == 0)
-		bzero(b, len);
-	else
-		for (bb = (char *)b; len--; )
-			*bb++ = c;
-	return (b);
-}
-#endif
+//LIBKERN_INLINE void *memset(void *, int, size_t);
+//#ifdef LIBKERN_BODY
+//LIBKERN_INLINE void *
+//memset(void *b, int c, size_t len)
+//{
+//	char *bb;
+//
+//	if (c == 0)
+//		bzero(b, len);
+//	else
+//		for (bb = (char *)b; len--; )
+//			*bb++ = c;
+//	return (b);
+//}
+//#endif
 
 static __inline char *
 strchr(const char *p, int ch)

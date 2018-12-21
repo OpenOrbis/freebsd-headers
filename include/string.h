@@ -59,7 +59,7 @@ void	*memchr(const void *, int, size_t) __pure;
 void	*memrchr(const void *, int, size_t) __pure;
 #endif
 int	 memcmp(const void *, const void *, size_t) __pure;
-void	*memcpy(void * __restrict, const void * __restrict, size_t) __pure;
+void	*memcpy(void * __restrict, const void * __restrict, size_t) /*__pure*/;
 #if __BSD_VISIBLE
 void	*memmem(const void *, size_t, const void *, size_t) __pure;
 #endif
@@ -74,7 +74,7 @@ char	*strcasestr(const char *, const char *) __pure;
 #endif
 char	*strcat(char * __restrict, const char * __restrict);
 char	*strchr(const char *, int) __pure;
-int	 *strcmp(const char *, const char *) __pure;
+int	 strcmp(const char *, const char *) __pure;
 int	 strcoll(const char *, const char *);
 char	*strcpy(char * __restrict, const char * __restrict);
 size_t	 strcspn(const char *, const char *) __pure;
@@ -89,7 +89,7 @@ int	 strerror_r(int, char *, size_t);
 size_t	 strlcat(char * __restrict, const char * __restrict, size_t);
 size_t	 strlcpy(char * __restrict, const char * __restrict, size_t);
 #endif
-size_t	 *strlen(const char *) __pure;
+size_t	 strlen(const char *) __pure;
 #if __BSD_VISIBLE
 void	 strmode(int, char *);
 #endif
